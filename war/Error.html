@@ -1,0 +1,29 @@
+<html>
+<head>
+<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+<h1>Connex.us</h1>
+</head>
+<body>
+	<right> <%
+ 	UserService userService = UserServiceFactory.getUserService();
+ 	User user = userService.getCurrentUser();
+ 	if (user != null) {
+ 		pageContext.setAttribute("user", user);
+ 	}
+ %><p align=right>
+		Hello, ${fn:escapeXml(user.nickname)}! <a
+			href="<%=userService.createLogoutURL("/Welcome.jsp",
+					request.getRequestURI())%>">Sign
+			out</a>
+	</p>
+	</right>
+	<a href="/Manage.jsp">Manage</a> |
+	<a href="/CreateStream.jsp">Create</a> |
+	<a href="/ViewAllStreams.jsp">View</a> |
+	<a href="/Search.jsp">Search</a> | 
+	<a href="/TrendingResults.jsp">Trending</a> |
+	<a href="/FacebookLogin.jsp">Social</a>
+
+Error: You tried to create a new stream whose name is the same as an existing stream; operation did not complete.
+
+</body></html>

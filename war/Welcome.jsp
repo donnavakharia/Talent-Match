@@ -14,7 +14,7 @@
 
 <html>
 <head>
-    <link rel="stylesheet"
+<link rel="stylesheet"
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <!-- Generic page styles -->
 <link rel="stylesheet" href="css/style.css">
@@ -31,12 +31,9 @@
 <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 <link type="text/css" rel="stylesheet" href="css/style1.css" />
 
-	<i>A tool to facilitate talent match operations.</i>
-	
-	
-  </head>
-  <body background="backgrd.jpeg">
-<div class="navbar navbar-default navbar-fixed-top">
+</head>
+<body background="backgrd.jpeg">
+	<div class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -59,8 +56,11 @@
 			</div>
 		</div>
 	</div>
+<div class="container">
+	<!-- img src="logo.jpeg" width="300" height="100"-->
+	<img src="http://www.logomaker.com/logo-images/60456f4a75ea7c68.gif"/>
+<a href="http://www.logomaker.com"><img src="http://www.logomaker.com/images/logos.gif" alt="logo design" border="0"/></a>
 
-<br><br>
 <%
     String guestbookName = request.getParameter("guestbookName");
     if (guestbookName == null) {
@@ -69,27 +69,57 @@
     pageContext.setAttribute("guestbookName", guestbookName);
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
-    if (user != null) {
-      pageContext.setAttribute("user", user);
-%>
-<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
-<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
-
-Click <a href="/Manage.jsp">here</a> to get started.
-<%
-    } else {
-%>
-<p>
-<a href="<%= userService.createLoginURL("/Manage.jsp",request.getRequestURI()) %>">Sign in</a>
-to Connexus.</p>
-	
-
-<%
-    }
 %>
 
+<table width=100% height=100%>
+<tr><td width=50%><h2>Welcome recruiters! </h2><br><br>
+<h4>
+Talent-Match helps recruiters find matching profiles 
+<br>from Github for their job postings.
+<br>
+<br>
 
-    
+<img src="octocat.jpeg">
+<br>
+<br>
+Login to get started!
+<br>
+<br>
+<a href="<%= userService.createLoginURL("/Manage.jsp",request.getRequestURI()) %>">
+<button type="button" class="btn btn-success">Recruiter Login</button></a>
+</h4>
+<br>
+<br>
+<br>
+</td>
+
+<td width=50%><h2>Welcome Job-seekers! </h2><br><br>
+<h4>
+Our webapp has compiled jobs from Indeed and CareerBuilder that shows results matching your
+profile without even searching for them!
+<br>
+<br>
+<img src="indeed_logo.jpeg" width="200" height="100">
+<br>
+<img src="careerbuilder_logo.jpeg" width="250" height="150">
+<br>
+Click below to get started.
+<br>
+<br>
+<a href="<%= userService.createLoginURL("/ViewProfile.jsp",request.getRequestURI()) %>">
+<button type="button" class="btn btn-success">JobSeeker Login</button></a>
+</h4>
+<br>
+<br>
+<br>
+</td></tr>
+
+
+</table>
+
+
+</div>
+
    
 
   </body>

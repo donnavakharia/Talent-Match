@@ -17,7 +17,13 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <html>
-<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta charset="utf-8">
+<title>Talent-Match - Manage</title>
+<meta name="description"
+	content="File Upload widget with multiple file selection, drag&amp;drop support, progress bars, validation and preview images, audio and video for jQuery. Supports cross-domain, chunked and resumable file uploads and client-side image resizing. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet"
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <!-- Generic page styles -->
@@ -37,7 +43,7 @@
 
 <script>
 	function getValues() {
-		var cbs = document.getElementsByName('chkBox');
+		var cbs = document.getElementsByName('searchjob');
 		var result = '';
 
 		for ( var i = 0; i < cbs.length; i++) {
@@ -49,8 +55,8 @@
 		return result;
 	}
 	
-	function getValuesUnsubscribe() {
-		var cbs = document.getElementsByName('chkBox_un');
+	function deleteValues() {
+		var cbs = document.getElementsByName('chkBox');
 		var result = '';
 
 		for ( var i = 0; i < cbs.length; i++) {
@@ -58,7 +64,7 @@
 				result += (result.length > 0 ? "," : "") + cbs[i].value;
 		}
 		//alert(result);
-		window.location.href = "/Unsubscribe.jsp?streamName=".concat(result);
+		window.location.href = "/Delete.jsp?jobid=".concat(result);
 		return result;
 	}
 </script>
@@ -87,6 +93,8 @@
 			</div>
 		</div>
 	</div>
+	<div class="container">
+		<h1>My Jobs</h1>
 	<right> <%
  	UserService userService = UserServiceFactory.getUserService();
  	User user = userService.getCurrentUser();
@@ -103,16 +111,14 @@
 	</p>
 	</right>
 
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-pills">
 			<li class="active"><a href="/Manage.jsp">Manage</a></li>
-			<li><a href="/CreateStream.jsp">Add Postings</a></li>
-			<li><a href="/ViewAllStreams.jsp">View</a></li>
-			<li><a href="/Search.jsp">Search</a></li>
-			<li><a href="/TrendingResults.jsp">Trending</a></li>
-			<li><a href="/FacebookLogin.jsp">Social</a></li>
+			<li><a href="/Add.jsp">Add Postings</a></li>
+			<li><a href="/Manage.jsp">Search</a></li>
 		</ul>
+		<hr>
 <div class="container">
-	<h2>My Jobs</h2>
+	
 	<table bgcolor="#FFFFFF" class="table table-striped tablesorter">
 		<tr>
 			<th> </th>
@@ -124,6 +130,7 @@
 			<th>Experience</th>
 			<th>Manager</th>
 			<th>Contact Email</th>
+			<th>Delete</th>
 		</tr>
 		<%
 			List<AddPosting> th = OfyService.ofy().load().type(AddPosting.class).list();
@@ -140,7 +147,7 @@
 					
 		%>
 		<tr bgcolor="#FFFFFF">
-			<td><input type="radio" id="<%=s.jobID%>" name="chkBox"
+			<td><input type="radio" id="<%=s.jobID%>" name="searchjob"
 				value='<%=s.jobID%>'><br></td>
 			<td><%=s.jobID%></td>
 			
@@ -152,6 +159,8 @@
 				<td><%=s.experience%></td>
 				<td><%=s.hiringManager%></td>
 				<td><%=s.hiringManagerEmail%></td>
+				<td><input type="checkbox" id="<%=s.jobID%>" name="chkBox"
+				value='<%=s.jobID%>'><br></td>
 		<tr bgcolor="#FFFFFF">
 
 
@@ -161,9 +170,16 @@
 			%>
 			<br>
 	</table>
+	
+	<i>*Select one of the radio buttons and click on Search to find matching profiles</i><br>
 	<br>
-	<input id="delete" type="button" value="Search"
+	<input id="search" type="button" value="Search" class="btn btn-success"
 		onclick='getValues()'>
+		<div class="pull-right">
+		<input id="delete" type="button" value="Delete Marked Jobs" class="btn btn-danger"
+		onclick='deleteValues()'>
+		</div>
+	</div>
 	</div>
 </body>
 </html>

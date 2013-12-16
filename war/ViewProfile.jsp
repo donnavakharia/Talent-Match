@@ -16,8 +16,14 @@
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<html>
-<head>
+<html>	
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta charset="utf-8">
+<title>Talent-Match - Profile</title>
+<meta name="description"
+	content="File Upload widget with multiple file selection, drag&amp;drop support, progress bars, validation and preview images, audio and video for jQuery. Supports cross-domain, chunked and resumable file uploads and client-side image resizing. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet"
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <!-- Generic page styles -->
@@ -45,10 +51,18 @@
 				result += (result.length > 0 ? "," : "") + cbs[i].value;
 		}
 		//alert(result);
-		window.location.href = "/JobSearch.jsp";
+		window.location.href = "/GeoSearch.jsp";
 		return result;
 	}
 
+	function gotoedit() {
+		var result=0;
+		//alert(result);
+		window.location.href = "/EditProfile.jsp";
+		return result;
+	}
+	
+	
 	function getValuesUnsubscribe() {
 		var cbs = document.getElementsByName('chkBox_un');
 		var result = '';
@@ -87,6 +101,8 @@
 			</div>
 		</div>
 	</div>
+	<div class="container">
+			<h1> My Profile</h1>
 	<right> <%
  	UserService userService = UserServiceFactory.getUserService();
  	User user = userService.getCurrentUser();
@@ -103,16 +119,23 @@
 	</p>
 	</right>
 
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="/ViewProfile.jsp">My Profile</a></li>
-		<li><a href="/JobSearch.jsp">Recommended Jobs</a></li>
-		<li><a href="/ViewAllStreams.jsp">View</a></li>
-		<li><a href="/Search.jsp">Search</a></li>
-		<li><a href="/TrendingResults.jsp">Trending</a></li>
-		<li><a href="/FacebookLogin.jsp">Social</a></li>
-	</ul>
+	
+<ul class="nav nav-pills">
+			<li class="active"><a href="/ViewProfile.jsp">Profile</a></li>
+			<li><a href="/JobSearch.jsp">Indeed Jobs</a></li>
+			<li><a href="/CBJobSearch.jsp">Careerbuilder Jobs</a></li>
+			<li><a href="/GeoSearch.jsp">GeoSearch</a></li>
+		</ul>
+		<hr>
 	<div class="container">
-		<h2>My Jobs</h2>
+	<i>
+		Select a tab to view recommended jobs from Indeed/Careerbuilder.</i>
+		<br>
+		<div class="pull-right">
+		<input id="edit" type="button" value="Edit Profile" class="btn btn-primary"
+		onclick='gotoedit()'>
+		</div>
+		<br>
 		<table bgcolor="#FFFFFF" class="table table-striped tablesorter">
 			<tr>
 
@@ -120,9 +143,23 @@
 			<%
 				List<JobSeeker> th = OfyService.ofy().load().type(JobSeeker.class)
 						.list();
-
+			int count=0;
 				Collections.sort(th);
 				//String name="test@example.com";
+				for (JobSeeker s : th ) {
+			if(s.postOwner.equals(user.getNickname()))
+				count++;
+					}
+		%>
+		<script>
+		var c="<%=count%>";
+		//alert(c);
+		if (c<1)
+			window.location="/CreateProfile.jsp";
+		</script>
+		<%
+				
+				
 				for (JobSeeker s : th) {
 					if (s.postOwner != null && s.postOwner.equals(name)) {
 						// APT: calls to System.out.println go to the console, calls to out.println go to the html returned to browser
@@ -173,8 +210,13 @@
 			%>
 			<br>
 		</table>
-		<br> <input id="delete" type="button" value="Search"
+		Click below to <i>Geo-View</i> the search results! <br>
+		
+		<br> <input id="delete" type="button" class="btn btn-success" value="Geo-Search"
 			onclick='getValues()'>
+			<br>
+			<br>
+	</div>
 	</div>
 </body>
 </html>

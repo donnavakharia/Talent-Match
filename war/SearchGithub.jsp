@@ -19,6 +19,13 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <html>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta charset="utf-8">
+<title>Talent-Match - Search Results</title>
+<meta name="description"
+	content="File Upload widget with multiple file selection, drag&amp;drop support, progress bars, validation and preview images, audio and video for jQuery. Supports cross-domain, chunked and resumable file uploads and client-side image resizing. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <head>
 <link rel="stylesheet"
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
@@ -38,6 +45,7 @@
 <link type="text/css" rel="stylesheet" href="css/style1.css" />
 
 </head>
+
 <body background="backgrd.jpeg">
 	<div class="navbar navbar-default navbar-fixed-top">
 		<div class="container">
@@ -62,6 +70,8 @@
 			</div>
 		</div>
 	</div>
+	<div class="container">
+		<h1>Search Results</h1>
 	<right> <%
  	UserService userService = UserServiceFactory.getUserService();
  	User user = userService.getCurrentUser();
@@ -77,22 +87,20 @@
 	</right>
 
 
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-pills">
 			<li><a href="/Manage.jsp">Manage</a></li>
-			<li><a href="/CreateStream.jsp">Add Postings</a></li>
-			<li><a href="/ViewAllStreams.jsp">View</a></li>
-			<li><a href="/Search.jsp">Search</a></li>
-			<li><a href="/TrendingResults.jsp">Trending</a></li>
-			<li><a href="/FacebookLogin.jsp">Social</a></li>
+			<li><a href="/Add.jsp">Add Postings</a></li>
+			<li class="active"><a href="/Manage.jsp">Search</a></li>
 		</ul>
-		
+		<hr>
 <div class="container">
 
-	<br>
-	<br>
+	
 	<%
-		String url="";
-		String jsonString="";	
+		String url1="";
+		String url2="";
+		String jsonString1="";	
+		String jsonString2="";	
 		//Long streamId = new Long(request.getParameter("streamId"));
 		String jobID = request.getParameter("jobID");
 		//String[] streams = streamName.split(",");
@@ -103,7 +111,7 @@
 		Collections.sort(th);
 		for (AddPosting s : th) {
 			if (s.jobID.equals(jobID)) {
-
+				out.println("<h2>Top 5 results by location: "+s.location+"</h2>");
 				System.out.println(s.jobID);
 				System.out.println(s.title);
 				System.out.println(s.category);
@@ -120,42 +128,60 @@
 						newLoc += loc[i] + "%20";
 				}
 
-				url = "https://api.github.com/search/users?q=language:"
+				url1 = "https://api.github.com/search/users?q=language:"
 						+ s.skills.toLowerCase()
 						+ "+location:"
 						+ newLoc
 						+ "&sort=stars&order=desc";
+				url2 = "https://api.github.com/search/users?q=language:"
+						+ s.skills.toLowerCase()
+						+ "+location:USA"
+						+ "&sort=stars&order=desc";
 
-				//out.println("\n" + url + "\n");
+				//out.println("\n" + url1 + "<br>" + url2);
 
-				URL obj = new URL(url);
-				HttpURLConnection con = (HttpURLConnection) obj
+				URL obj1 = new URL(url1);
+				URL obj2 = new URL(url2);
+				HttpURLConnection con1 = (HttpURLConnection) obj1
 						.openConnection();
-
+				HttpURLConnection con2 = (HttpURLConnection) obj2
+						.openConnection();
 				// optional default is GET
-				con.setRequestMethod("GET");
-
+				con1.setRequestMethod("GET");
+				con2.setRequestMethod("GET");
 				//add request header
-				con.setRequestProperty("User-Agent", "Mozilla/5.0");
-
-				int responseCode = con.getResponseCode();
+				con1.setRequestProperty("User-Agent", "Mozilla/5.0");
+				con2.setRequestProperty("User-Agent", "Mozilla/5.0");
+				
+				int responseCode1 = con1.getResponseCode();
+				int responseCode2 = con2.getResponseCode();
 				System.out.println("\nSending 'GET' request to URL : "
-						+ url);
-				System.out.println("Response Code : " + responseCode);
+						+ url1);
+				System.out.println("Response Code : " + responseCode1);
 
-				BufferedReader in = new BufferedReader(
-						new InputStreamReader(con.getInputStream()));
-				String inputLine;
+				BufferedReader in1 = new BufferedReader(
+						new InputStreamReader(con1.getInputStream()));
+				BufferedReader in2 = new BufferedReader(
+						new InputStreamReader(con2.getInputStream()));
+				String inputLine1;
 				StringBuffer response1 = new StringBuffer();
+				String inputLine2;
+				StringBuffer response2 = new StringBuffer();
 
-				while ((inputLine = in.readLine()) != null) {
-					response1.append(inputLine);
+				while ((inputLine1 = in1.readLine()) != null) {
+					response1.append(inputLine1);
 				}
-				in.close();
+				in1.close();
 
+				while ((inputLine2 = in2.readLine()) != null) {
+					response2.append(inputLine2);
+				}
+				in2.close();
+				
 				//print result
 				//out.println(response1.toString());
-				jsonString=response1.toString();
+				jsonString1=response1.toString();
+				jsonString2=response2.toString();
 				/////////
 
 				/////////////
@@ -170,19 +196,19 @@
 	
 	<table bgcolor="#FFFFFF" class="table table-striped tablesorter">
 		<tr bgcolor="#3366CC">
-			
+			<th></th>
 			<th>Name</th>
 			<th>Company</th>
 			<th>Location</th>
 			<th># of Public Repos</th>
 			<th># of Followers</th>
 			<th>Contact Info</th>
-			<th>Score</th>
+			
 			<th>Member since</th>
 			
 		</tr>
 	<script>
-	var theUrl = "<%=url%>";
+	var theUrl = "<%=url1%>";
 	var xmlHttp = null;
 	//var theUrl="https://api.github.com/search/users?q=language:Ruby+location:Boston%20&sort=followers";
     xmlHttp = new XMLHttpRequest();
@@ -192,7 +218,7 @@
 	var newj= JSON.parse(xmlHttp.responseText);
 	//var contact= JSON.parse(contact[0]);
 	//document.write("<br> QueryURL: " + theUrl + "<br>" );
-	for (var i=0;i<newj.total_count;i++)
+	for (var i=0;i<5;i++)
 { 
 	/*document.write("<br> UserName: " + newj.items[i].login + 
 			" 		URL: " +newj.items[i].url
@@ -216,16 +242,114 @@
 	
 				
 	);*/
-	document.write("<tr bgcolor=\"#FFFFFF\"><td>"+newj1.name+"</td><td>"+newj1.company+"</td><td>"+
-			newj1.location+ "</td><td>" + newj1.public_repos + "</td><td>"+ 
-			newj1.followers + "</td><td>"+newj1.email+ "</td><td>"+ newj.items[i].score + "</td><td>"
-			+ newj1.created_at.substring(0,10) +"</td></tr>"
+	var repoURL = "https://github.com/"+newj1.login+"/?tab=repositories";
+	var followersURL = "https://github.com/"+newj1.login+"/followers";
+	var linkuser = "https://talent-match.appspot.com/SearchUser.jsp?jobID="+"<%=jobID%>"+"&username="+newj1.login;
+	//alert(linkuser);
+	document.write("<tr bgcolor=\"#FFFFFF\"><td>"+"<a href=" + linkuser +" target=\"_blank\">" +	
+			"<img src=\""+newj1.avatar_url+ "\" width=\"100\" height=\"100\" alt=\"Broken Image\"></a></td><td>"+ "<a href="+linkuser+" target=\"_blank\">"+
+			newj1.name +"</a></td><td>"+newj1.company+"</td><td>"+
+			newj1.location+ "</td><td>"+ newj1.public_repos + "</td><td>" + newj1.followers + "</td><td>"+newj1.email+ "</td><td>"+ 
+			newj1.created_at.substring(0,10) +"</td></tr>"
+			);
+	
+}
+	</script>
+
+
+	</table>
+	<script>
+	function more1() {
+		var	result = "<%=jobID%>";
+		window.location.href = "/SearchGithubMore1.jsp?jobID=".concat(result);
+		return result;
+	}
+</script>
+<div class="pull-right">
+		<input id="more1" type="button" value="More..." class="btn btn-success"
+		onclick='more1()'>
+		</div>
+<br>
+<h2>Top 5 results from USA</h2>
+	
+	<table bgcolor="#FFFFFF" class="table table-striped tablesorter">
+		<tr bgcolor="#3366CC">
+			<th></th>
+			<th>Name</th>
+			<th>Company</th>
+			<th>Location</th>
+			<th># of Public Repos</th>
+			<th># of Followers</th>
+			<th>Contact Info</th>
+			
+			<th>Member since</th>
+			
+		</tr>
+	<script>
+	var theUrl2 = "<%=url2%>";
+	var xmlHttp2 = null;
+	//var theUrl="https://api.github.com/search/users?q=language:Ruby+location:Boston%20&sort=followers";
+    xmlHttp2 = new XMLHttpRequest();
+    xmlHttp2.open( "GET", theUrl2, false );
+    xmlHttp2.send( null );
+	//document.write(xmlHttp.responseText);
+	var newj2= JSON.parse(xmlHttp2.responseText);
+	//var contact= JSON.parse(contact[0]);
+	//document.write("<br> QueryURL: " + theUrl + "<br>" );
+	for (var i=0;i<5;i++)
+{ 
+	/*document.write("<br> UserName: " + newj.items[i].login + 
+			" 		URL: " +newj.items[i].url
+			+ " avatar_url" + newj.items[i].avatar_url
+			+ " html_url" + newj.items[i].html_url			
+	);*/
+	var userUrl2 = newj2.items[i].url + "?client_id=174ccdc41e7df33ca09b&client_secret=1c8cd4be4ba471dde2d7561416dd95be20cf9731";
+	var xmlHttp3 = null;
+	//var theUrl="https://api.github.com/search/users?q=language:Ruby+location:Boston%20&sort=followers";
+    xmlHttp3 = new XMLHttpRequest();
+    xmlHttp3.open( "GET", userUrl2, false );
+    xmlHttp3.send( null );
+	//document.write(xmlHttp1.responseText);
+	var newj3= JSON.parse(xmlHttp3.responseText);
+	//var contact= JSON.parse(contact[0]);
+	
+	/*document.write("<br> QueryURL: " + userUrl + "  "
+			+newj1.name + "  "+ newj1.company+ "  " + newj1.blog + "  "
+				+ newj1.location + "  "+ newj1.email + "  "+ newj1.bio + "  "
+				+ newj1.public_repos + "  "+ newj1.followers + "  "+ newj1.created_at 	+ "<br>" 	
+	
+				
+	);*/
+	
+	repoURL = "https://github.com/"+newj3.login+"/?tab=repositories";
+	followersURL = "https://github.com/"+newj3.login+"/followers";
+	linkuser = "https://talent-match.appspot.com/SearchUser.jsp?jobID="+"<%=jobID%>"+"&username="+newj3.login;
+	
+	document.write("<tr bgcolor=\"#FFFFFF\"><td>"+"<a href=" + linkuser +" target=\"_blank\">" +	
+			"<img src=\""+newj3.avatar_url+ "\" width=\"100\" height=\"100\" alt=\"Broken Image\"></a></td><td>"+ "<a href="+linkuser+" target=\"_blank\">"+
+			newj3.name +"</a></td><td>"+newj3.company+"</td><td>"+
+			newj3.location+ "</td><td>"+ newj3.public_repos + "</td><td>" + newj3.followers + "</td><td>"+newj3.email+ "</td><td>"+ 
+			newj3.created_at.substring(0,10) +"</td></tr>"
 			);
 	
 }
 	</script>
 
 	</table>
+		<script>
+	function more2() {
+		var result = "<%=jobID%>";
+		//alert(result);
+		window.location.href = "/SearchGithubMore2.jsp?jobID=".concat(result);
+		return result;
+	}
+</script>
+	<div class="pull-right">
+		<input id="more2" type="button" value="More..." class="btn btn-success"
+		onclick='more2()'>
+		</div>
 	</div>
+	<br><br>
+	
 </body>
 </html>

@@ -79,16 +79,15 @@
 	</right>
 <ul class="nav nav-pills">
 			<li><a href="/Manage.jsp">Manage</a></li>
-			<li class="active"><a href="/CreateStream.jsp">Add Postings</a></li>
+			<li class="active"><a href="/Add.jsp">Add Postings</a></li>
 			<li><a href="/Manage.jsp">Search</a></li>
 		</ul>
-		
+		<hr>
 	<!--  APT: this can be static so we put in html not jsp. Note that the added stream may take a few seconds to show up, 
 so the ViewAllStreams.jsp that createStreamServlet redirects to may not contain the stream that's just been added -->
 <div class="container">
-	
-	
-	<form name="createStreamInput" action="createStreamServlet"
+<br>
+	<!-- form name="createStreamInput" action="createStreamServlet"
 		method="get">
 		Job ID: <input type="text" name="jobID" required><br>  <br>
 		Job Title: <input type="text" name="title"><br>  <br>
@@ -101,7 +100,74 @@ so the ViewAllStreams.jsp that createStreamServlet redirects to may not contain 
 		<br> <input type="hidden" name="user"
 			value=${fn:escapeXml(user.nickname)}>
 		<br> <input	type="submit" value="Add">
+	</form-->
+	<form name="createStreamInput" action="createStreamServlet"	method="get">
+	
+		<div class="row">
+		<label for="1" class="col-sm-1 control-label">
+		Job ID</label>
+		<div class="col-sm-2">
+		<input type="text" id="1" name="jobID" required class="form-control" placeholder="Enter JobID"><br>  
+		</div>
+		</div>
+
+		<div class="row">
+		<label for="2" class="col-sm-1 control-label">
+		Job Title</label>
+		<div class="col-sm-3">
+		<input type="text" name="title" id="2" class="form-control" placeholder="Enter job title. Eg. Java Developer"><br>  
+		</div>
+		</div>
+		
+		<div class="row">
+		<label for="3" class="col-sm-1 control-label">
+		Category </label>  <div class="col-sm-2">
+		<input type="text" required name="category" id="3" class="form-control" placeholder="Eg. Dev, Test, etc."><br>  
+		</div>
+		</div>
+		
+		<div class="row">
+		<label for="3" class="col-sm-1 control-label">
+		Location</label> <div class="col-sm-2">
+		<input type="text" id="3" required name="location" class="form-control" placeholder="Enter Location"> <br>
+		</div>
+		</div>
+		
+		<div class="row">
+		<label for="4" class="col-sm-1 control-label">
+		Skills </label>  <div class="col-sm-5">
+		<input type="text" required name="skills" id="4" class="form-control" placeholder="Eg. Java, C, C++, Python, Ruby, etc."><br>  
+		</div>
+		</div>
+
+		<div class="row">	
+		<label for="5" class="col-sm-1 control-label">
+		Experience Required </label><div class="col-sm-2">
+		<input id="5" type="text" name="experience" class="form-control" placeholder="In years"><br>  
+		</div>
+		</div>
+		
+		<div class="row">
+		<label for="6" class="col-sm-1 control-label">
+		Manager </label>  <div class="col-sm-3">
+		<input type="text" required name="hiringManager" id="6" class="form-control" placeholder="Enter hiring manager's name"><br>  
+		</div>
+		</div>
+		
+		<div class="row">
+		<label for="7" class="col-sm-1 control-label">
+		Manager's Email </label>  <div class="col-sm-3">
+		<input type="text" required name="hiringManagerEmail" id="7" class="form-control" placeholder="Enter manager's email address"><br>  
+		</div>
+		</div>
+		
+
+		<br> <input type="hidden" name="user"
+			value=${fn:escapeXml(user.nickname)}>
+		 <input	type="submit" class="btn btn-success" value="Submit"><i class="icon-white icon-ok-sign"></i>
 	</form>
+	
+
 
 	<!--form name="createStreamInput" action="createStreamServlet"
 		method="get">
